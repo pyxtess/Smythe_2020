@@ -47,17 +47,17 @@ public class SmithCameraController : MonoBehaviour
     {
         if (prevConsolidation < unit.currConsolidationLvl)
         {
-            Camera.main.orthographicSize += 0.1f;
+            Camera.main.orthographicSize += 0.15f;
             prevConsolidation = unit.currConsolidationLvl;
         }
         if (prevSpread < unit.currSpread)
         {
-            Camera.main.orthographicSize += 0.05f;
+            Camera.main.orthographicSize += 0.075f;
             prevSpread = unit.currSpread;
         }
         if (prevSpread > unit.currSpread)
         {
-            Camera.main.orthographicSize -= 0.05f;
+            Camera.main.orthographicSize -= 0.075f;
             prevSpread = unit.currSpread;
         }
     }
