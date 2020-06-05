@@ -21,18 +21,16 @@ public class SmithCameraController : MonoBehaviour
         prevConsolidation = unit.currConsolidationLvl;
         prevSpread = unit.currSpread;
 
-        //Camera.main.orthographicSize = cameraSize;
+        //cameraSize = Camera.main.orthographicSize;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        UpdateOrthogonalSize();
         viewCenterPoint();
 
-        UpdateOrthogonalSize();
-
-        
-        
     }
     
     //Keeps Camera locked on center position
@@ -40,13 +38,27 @@ public class SmithCameraController : MonoBehaviour
     {
         targetPos = new Vector3(unit.centerPoint.transform.position.x, unit.centerPoint.transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPos, cameraSpeed * Time.fixedDeltaTime);
+
+        
     }
 
+    //Updates camera scale
     private void UpdateOrthogonalSize()
     {
-        /*
+        if (prevConsolidation < unit.currConsolidationLvl)
+        {
+            Camera.main.orthographicSize += 0.1f;
+            prevConsolidation = unit.currConsolidationLvl;
+        }
         if (prevSpread < unit.currSpread)
-            Camera.main.orthographicSize
-        */
+        {
+            Camera.main.orthographicSize += 0.05f;
+            prevSpread = unit.currSpread;
+        }
+        if (prevSpread > unit.currSpread)
+        {
+            Camera.main.orthographicSize -= 0.05f;
+            prevSpread = unit.currSpread;
+        }
     }
 }

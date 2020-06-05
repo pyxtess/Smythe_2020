@@ -25,6 +25,12 @@ public class MetalController : MonoBehaviour
             unit.Consolidation();
         if (Input.GetKeyDown(KeyCode.R))
             unit.Spread();
+        if (Input.GetKeyDown(KeyCode.W))
+            unit.nextSpine();
+        if (Input.GetKeyDown(KeyCode.S))
+            unit.prevSpine();
+        if (Input.GetKeyDown(KeyCode.Q))
+            unit.rotateCW();
 
         UpdateUI();
     }

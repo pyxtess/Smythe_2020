@@ -16,6 +16,8 @@ public class UnitMetal : MonoBehaviour
 
     //Pointers
     public GameObject centerPoint;
+    public GameObject spinePoint;
+    [SerializeField] private int sPos;
     
     //Max Scale
     public float maxConsolidation;
@@ -36,16 +38,57 @@ public class UnitMetal : MonoBehaviour
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private void Start()
     {
+        spinePoint.transform.position = spine[1].transform.position;
+        sPos = 1;
+
         UpdateConsolidationLvl();
         UpdateSpread();
         UpdateCenter();
     }
-/// 
+    /// 
+/// ///////////////////////////////////////////////////////////////////////
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+* UI Guide Section: Where UI elements are located
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    
+    // Goes to next spine bone; loops back around if at end
+    public void nextSpine()
+    {
+        if(sPos+1 >= spine.Length)
+        {
+            sPos = 1;
+            spinePoint.transform.position = spine[sPos].transform.position;
+        }
+        else
+            spinePoint.transform.position = spine[++sPos].transform.position;
+    }
+
+    // Goes to prev spine bone; loops back around if at beginning
+    public void prevSpine()
+    {
+        if (sPos - 1 < 1)
+        {
+            sPos = spine.Length - 1;
+            spinePoint.transform.position = spine[sPos].transform.position;
+        }
+        else
+            spinePoint.transform.position = spine[--sPos].transform.position;
+    }
+    /// 
 /// ///////////////////////////////////////////////////////////////////////
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 * Update Section: Where components are updated
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    // Updates UI elements
+    public void UpdateUI()
+    {
+        spinePoint.transform.position = spine[sPos].transform.position;
+    }
+        
+    // Updates center point location
     public Vector3 UpdateCenter()
     {
         centerPoint.transform.position = Vector3.Lerp(spine[0].transform.position, spine[18].transform.position, 0.5f);
@@ -66,7 +109,7 @@ public class UnitMetal : MonoBehaviour
         currConsolidationLvl = boneGroup.transform.localScale.x;
         return currConsolidationLvl;
     }
-/// 
+    /// 
 /// ///////////////////////////////////////////////////////////////////////
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -88,6 +131,7 @@ public class UnitMetal : MonoBehaviour
             UpdateConsolidationLvl();
             UpdateSpread();
             UpdateCenter();
+            UpdateUI();
         }
     }
 
@@ -101,13 +145,26 @@ public class UnitMetal : MonoBehaviour
 
             UpdateSpread();
             UpdateCenter();
+            UpdateUI();
         }
+    }
+
+    //Rotate the spine clockwise
+    public void rotateCW()
+    {
+        //add dynamic restrictions
+
+        // Rotate the cube by converting the angles into a quaternion.
+        Quaternion target = Quaternion.Euler(0, 0, spine[sPos].transform.rotation.z - 1);
+
+        // Dampen towards the target rotation
+        spine[sPos].transform.rotation = Quaternion.Slerp(transform.rotation, target, 5.0f);
     }
 
 
     /// 
     /// ///////////////////////////////////////////////////////////////////////
-    
+
 
 
 }
