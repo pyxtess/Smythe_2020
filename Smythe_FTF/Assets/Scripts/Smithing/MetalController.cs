@@ -30,6 +30,8 @@ public class MetalController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
             unit.prevSpine();
         if (Input.GetKeyDown(KeyCode.Q))
+            unit.rotateACW();
+        if (Input.GetKeyDown(KeyCode.E))
             unit.rotateCW();
 
         UpdateUI();

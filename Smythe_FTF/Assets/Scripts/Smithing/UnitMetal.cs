@@ -152,13 +152,12 @@ public class UnitMetal : MonoBehaviour
     //Rotate the spine clockwise
     public void rotateCW()
     {
-        //add dynamic restrictions
+        spine[sPos].transform.Rotate(new Vector3(0f, 0f, -1f));
+    }
 
-        // Rotate the cube by converting the angles into a quaternion.
-        Quaternion target = Quaternion.Euler(0, 0, spine[sPos].transform.rotation.z - 1);
-
-        // Dampen towards the target rotation
-        spine[sPos].transform.rotation = Quaternion.Slerp(transform.rotation, target, 5.0f);
+    public void rotateACW()
+    {
+        spine[sPos].transform.Rotate(new Vector3(0f, 0f, 1f));
     }
 
 
