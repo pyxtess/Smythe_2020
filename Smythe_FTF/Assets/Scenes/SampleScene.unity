@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 196357972}
   - component: {fileID: 196357973}
   m_Layer: 0
-  m_Name: SpinePoint
+  m_Name: EditPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -981,8 +981,8 @@ MonoBehaviour:
   - {fileID: 1755276720}
   - {fileID: 105921887}
   m_Bounds:
-    m_Center: {x: 0.00000011920929, y: 0.00000023841858, z: 0}
-    m_Extent: {x: 0.56250024, y: 0.56250024, z: 0}
+    m_Center: {x: 0.00000059604645, y: 0.00000023841858, z: 0}
+    m_Extent: {x: 0.5625007, y: 0.56250024, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
 --- !u!212 &738489170
@@ -1500,7 +1500,9 @@ MonoBehaviour:
   - {fileID: 904215441}
   - {fileID: 1755276719}
   centerPoint: {fileID: 2130579303}
-  spinePoint: {fileID: 196357971}
+  editPoint: {fileID: 196357971}
+  ePos: 0
+  col: 0
   maxConsolidation: 3
   maxSpread: 25
   maxPorosity: 0

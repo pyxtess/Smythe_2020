@@ -16,9 +16,10 @@ public class UnitMetal : MonoBehaviour
 
     //Pointers
     public GameObject centerPoint;
-    public GameObject spinePoint;
-    [SerializeField] private int sPos;
-    
+    public GameObject editPoint;
+    [SerializeField] private int ePos;
+    [SerializeField] private int col = 0;
+
     //Max Scale
     public float maxConsolidation;
     //Max Length
@@ -38,8 +39,8 @@ public class UnitMetal : MonoBehaviour
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private void Start()
     {
-        spinePoint.transform.position = spine[1].transform.position;
-        sPos = 1;
+        editPoint.transform.position = spine[1].transform.position;
+        ePos = 1;
 
         UpdateConsolidationLvl();
         UpdateSpread();
@@ -52,40 +53,136 @@ public class UnitMetal : MonoBehaviour
 * UI Guide Section: Where UI elements are located
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
-    // Goes to next spine bone; loops back around if at end
-    public void nextSpine()
+    // Goes to next bone; loops back around if at end
+    public void nextBone()
     {
-        if(sPos+1 >= spine.Length)
+        switch (col)
         {
-            sPos = 1;
-            spinePoint.transform.position = spine[sPos].transform.position;
+            case 0:
+                if (ePos + 1 >= spine.Length)
+                {
+                    ePos = 1;
+                    editPoint.transform.position = spine[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = spine[++ePos].transform.position;
+                break;
+            case -1:
+                if (ePos + 1 >= leftEdge.Length)
+                {
+                    ePos = 0;
+                    editPoint.transform.position = leftEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = leftEdge[++ePos].transform.position;
+                break;
+            case 1:
+                if (ePos + 1 >= rightEdge.Length)
+                {
+                    ePos = 0;
+                    editPoint.transform.position = rightEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = rightEdge[++ePos].transform.position;
+                break;
         }
-        else
-            spinePoint.transform.position = spine[++sPos].transform.position;
     }
 
-    // Goes to prev spine bone; loops back around if at beginning
-    public void prevSpine()
+    // Goes to prev bone; loops back around if at beginning
+    public void prevBone()
     {
-        if (sPos - 1 < 1)
+        switch(col)
         {
-            sPos = spine.Length - 1;
-            spinePoint.transform.position = spine[sPos].transform.position;
+            case 0:
+                if (ePos - 1 < 1)
+                {
+                    ePos = spine.Length - 1;
+                    editPoint.transform.position = spine[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = spine[--ePos].transform.position;
+                break;
+            case -1:
+                if (ePos - 1 < 0)
+                {
+                    ePos = leftEdge.Length - 1;
+                    editPoint.transform.position = leftEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = leftEdge[--ePos].transform.position;
+                break;
+            case 1:
+                if (ePos - 1 < 0)
+                {
+                    ePos = rightEdge.Length - 1;
+                    editPoint.transform.position = rightEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = rightEdge[--ePos].transform.position;
+                break;
+        }  
+    }
+
+    // Goes to left bone group
+    public void leftBone()
+    {
+        switch(col)
+        {
+            case 0:
+                editPoint.transform.position = leftEdge[--ePos].transform.position;
+                --col;
+                break;
+            case 1:
+                editPoint.transform.position = spine[++ePos].transform.position;
+                --col;
+                break;
+            default:
+                break;
         }
-        else
-            spinePoint.transform.position = spine[--sPos].transform.position;
+    }
+
+    // Goes to left bone group
+    public void rightBone()
+    {
+        switch (col)
+        {
+            case 0:
+                editPoint.transform.position = rightEdge[--ePos].transform.position;
+                ++col;
+                break;
+            case -1:
+                editPoint.transform.position = spine[++ePos].transform.position;
+                ++col;
+                break;
+            default:
+                break;
+        }
     }
     /// 
-/// ///////////////////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-* Update Section: Where components are updated
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+    * Update Section: Where components are updated
+    \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     // Updates UI elements
     public void UpdateUI()
     {
-        spinePoint.transform.position = spine[sPos].transform.position;
+        //Updates EditPoint position
+        switch(col)
+        {
+            case 0:
+                editPoint.transform.position = spine[ePos].transform.position;
+                break;
+            case 1:
+                editPoint.transform.position = rightEdge[ePos].transform.position;
+                break;
+            case -1:
+                editPoint.transform.position = leftEdge[ePos].transform.position;
+                break;
+
+        }
+        
     }
         
     // Updates center point location
@@ -152,12 +249,17 @@ public class UnitMetal : MonoBehaviour
     //Rotate the spine clockwise
     public void rotateCW()
     {
-        spine[sPos].transform.Rotate(new Vector3(0f, 0f, -1f));
+        //Have dynamic restrictions
+        if (col == 0) //Not permanent
+            spine[ePos].transform.Rotate(new Vector3(0f, 0f, -1f));
     }
 
     public void rotateACW()
     {
-        spine[sPos].transform.Rotate(new Vector3(0f, 0f, 1f));
+        //Have dynamic restrictions
+
+        if (col == 0) //Not permanent
+            spine[ePos].transform.Rotate(new Vector3(0f, 0f, 1f));
     }
 
 

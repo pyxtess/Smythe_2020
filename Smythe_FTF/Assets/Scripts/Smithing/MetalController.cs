@@ -26,9 +26,13 @@ public class MetalController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             unit.Spread();
         if (Input.GetKeyDown(KeyCode.W))
-            unit.nextSpine();
+            unit.nextBone();
         if (Input.GetKeyDown(KeyCode.S))
-            unit.prevSpine();
+            unit.prevBone();
+        if (Input.GetKeyDown(KeyCode.A))
+            unit.leftBone();
+        if (Input.GetKeyDown(KeyCode.D))
+            unit.rightBone();
         if (Input.GetKeyDown(KeyCode.Q))
             unit.rotateACW();
         if (Input.GetKeyDown(KeyCode.E))
