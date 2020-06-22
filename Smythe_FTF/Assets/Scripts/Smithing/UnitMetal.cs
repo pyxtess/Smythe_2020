@@ -5,47 +5,62 @@ using UnityEngine;
 public class UnitMetal : MonoBehaviour
 {
     public string MetalName;
-
+//-----------------------------------------------
     //Bone Group
     public GameObject boneGroup;
-
+//-----------------------------------------------
     //Bones
     public GameObject[] spine;
     public GameObject[] leftEdge;
     public GameObject[] rightEdge;
-
+//-----------------------------------------------
     //Pointers
     public GameObject centerPoint;
     public GameObject editPoint;
     [SerializeField] private int ePos;
     [SerializeField] private int col = 0;
-
+//-----------------------------------------------
+    public float maxLength;
+    public float maxWidth;
     //Max Scale
     public float maxConsolidation;
-    //Max Length
-    public float maxSpread;
     //Max Brittleness (Critical Fail Threshold)
-    public float maxPorosity;
-
-    //Current Length
-    public float currSpread;
+    public int maxPorosity;
+    //-----------------------------------------------
+    public float currLength;
+    public float currWidth;
     //Current Scale
     public float currConsolidationLvl;
     //Current Brittleness (Critical Fail gauge)
-    public float currPorosity;
+    public int currPorosity;
+//-----------------------------------------------
+    //Best Consolidation point
+    //public float porosityThreshold;
+    //Number subtracted to porosity when successful
+    //public float cpSuccess;
+    //Number added to porosity when failed
+    //public float cpFail;
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-* Initialization: Startup stuff
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+    * Initialization: Startup stuff
+    \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private void Start()
     {
         editPoint.transform.position = spine[1].transform.position;
         ePos = 1;
 
+        currLength = 1;
+        currWidth = 1;
+
+        //cpSuccess = currPorosity / ((porosityThreshold - currConsolidationLvl) * 9);
+        //cpFail = maxPorosity / ((maxConsolidation - porosityThreshold) * 9);
+
         UpdateConsolidationLvl();
-        UpdateSpread();
+        //UpdateLength();
+        //UpdateWidth();
         UpdateCenter();
     }
+
     /// 
 /// ///////////////////////////////////////////////////////////////////////
 
@@ -158,12 +173,13 @@ public class UnitMetal : MonoBehaviour
                 break;
         }
     }
-    /// 
-    /// ///////////////////////////////////////////////////////////////////////
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-    * Update Section: Where components are updated
-    \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /// 
+/// ///////////////////////////////////////////////////////////////////////
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+* Update Section: Where components are updated
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     // Updates UI elements
     public void UpdateUI()
@@ -193,19 +209,33 @@ public class UnitMetal : MonoBehaviour
     }
 
     // Updates blade length
-    public float UpdateSpread()
+    public float UpdateLength()
     {
-        currSpread = Mathf.Round(Vector3.Distance(spine[0].transform.position, spine[18].transform.position)*10)/10;
+        currLength = Mathf.Round(Vector3.Distance(spine[0].transform.position, spine[18].transform.position)*10)/10;
         //UpdateCenter();
-        return currSpread;
+        return currLength;
+    }
+
+    // Updates blade length
+    public float UpdateWidth()
+    {
+        currWidth = Mathf.Round(Vector3.Distance(leftEdge[0].transform.position, rightEdge[0].transform.position) * 10) / 10;
+        //UpdateCenter();
+        return currWidth;
     }
 
     // Updates consolidation level
     public float UpdateConsolidationLvl()
     {
-        currConsolidationLvl = boneGroup.transform.localScale.x;
+        currConsolidationLvl = Mathf.Round(boneGroup.transform.localScale.x * 10)/10;
         return currConsolidationLvl;
     }
+
+    public float UpdatePorosityThreshold()
+    {
+        return currPorosity;
+    }
+
     /// 
 /// ///////////////////////////////////////////////////////////////////////
 
@@ -214,33 +244,54 @@ public class UnitMetal : MonoBehaviour
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     // Scales Bones group and spreads out the edge bones horizontally
-    public void Consolidation()
+    public void Consolidation(float consolPos)
     {
-        if(maxConsolidation > boneGroup.transform.localScale.x)
+        if(currConsolidationLvl < maxConsolidation)
         {
-            boneGroup.transform.localScale += new Vector3(0.1f, 0.1f, 0);
+            //0.1f
+            boneGroup.transform.localScale += new Vector3(consolPos, consolPos, 0);
 
-            foreach (GameObject lEdge in leftEdge)
-                lEdge.transform.position -= new Vector3(0.05f, 0f, 0f);
-            foreach (GameObject rEdge in rightEdge)
-                rEdge.transform.position += new Vector3(0.05f, 0f, 0f);
+            if (currPorosity > 0)
+                currPorosity -= 1;
+            else
+            {
+                currPorosity -= 2;
+                if (currPorosity <= maxPorosity)
+                    currPorosity = maxPorosity;
+            }
 
             UpdateConsolidationLvl();
-            UpdateSpread();
+            UpdateLength();
+            UpdateWidth();
             UpdateCenter();
             UpdateUI();
         }
     }
 
     //Spreads spine bones vertically
-    public void Spread()
+    public void drawAllVertical(float lengthScale)
     {
-        if(maxSpread > currSpread)
+        if(currLength < maxLength)
         {
             for (int i = 1; i < spine.Length - 1; ++i)
-                spine[i].transform.position += new Vector3(0f, 0.01f, 0f);
+                spine[i].transform.position += new Vector3(0f, lengthScale, 0f);
 
-            UpdateSpread();
+            UpdateLength();
+            UpdateCenter();
+            UpdateUI();
+        }
+    }
+
+    public void drawAllHorizontal(float widthScale)
+    {
+        if (currWidth < maxWidth)
+        {
+            foreach (GameObject lEdge in leftEdge)
+                lEdge.transform.position -= new Vector3(widthScale, 0f, 0f);
+            foreach (GameObject rEdge in rightEdge)
+                rEdge.transform.position += new Vector3(widthScale, 0f, 0f);
+
+            UpdateWidth();
             UpdateCenter();
             UpdateUI();
         }
@@ -262,9 +313,8 @@ public class UnitMetal : MonoBehaviour
             spine[ePos].transform.Rotate(new Vector3(0f, 0f, 1f));
     }
 
-
     /// 
-    /// ///////////////////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////////////////////
 
 
 

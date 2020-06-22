@@ -7,8 +7,10 @@ public class MetalController : MonoBehaviour
 {
     UnitMetal unit;
 
-    public Text spreadText;
+    public Text lengthText;
+    public Text widthText;
     public Text consolidationLvlText;
+    public Text porosityText;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +24,8 @@ public class MetalController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
-            unit.Consolidation();
+            unit.drawAllHorizontal(0.15f);
+        /*
         if (Input.GetKeyDown(KeyCode.R))
             unit.Spread();
         if (Input.GetKeyDown(KeyCode.W))
@@ -37,6 +40,7 @@ public class MetalController : MonoBehaviour
             unit.rotateACW();
         if (Input.GetKeyDown(KeyCode.E))
             unit.rotateCW();
+        */
 
         UpdateUI();
     }
@@ -44,13 +48,16 @@ public class MetalController : MonoBehaviour
     private void UpdateUI()
     {
         //Blade Length
-        spreadText.text = "Spread: " + Mathf.Round(unit.currSpread * 10) / 10 + " u.";
+        lengthText.text = "Blade Length: " + Mathf.Round(unit.currLength * 10) / 10 + " u.";
+
+        //Blade Width
+        widthText.text = "Blade Width: " + Mathf.Round(unit.currWidth * 10) / 10 + " u.";
 
         //Consolidation Level
         consolidationLvlText.text = "Consolidation: " + unit.currConsolidationLvl + " u.";
 
-        //Center Point Position
-        
+        //Porosity Threshold Position
+        porosityText.text = "Porosity Threshold: " + unit.currPorosity + " u.";
     }
 
 

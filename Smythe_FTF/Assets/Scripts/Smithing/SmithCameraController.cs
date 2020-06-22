@@ -12,14 +12,14 @@ public class SmithCameraController : MonoBehaviour
     //public float cameraSize;
 
     private float prevConsolidation;
-    private float prevSpread;
+    private float prevLength;
 
     // Start is called before the first frame update
     void Start()
     {
         unit = GameObject.FindGameObjectWithTag("UnitInfo").GetComponent<UnitMetal>();
-        prevConsolidation = unit.currConsolidationLvl;
-        prevSpread = unit.currSpread;
+        prevConsolidation = unit.maxConsolidation;
+        prevLength = unit.currLength;
 
         //cameraSize = Camera.main.orthographicSize;
         
@@ -50,15 +50,15 @@ public class SmithCameraController : MonoBehaviour
             Camera.main.orthographicSize += 0.15f;
             prevConsolidation = unit.currConsolidationLvl;
         }
-        if (prevSpread < unit.currSpread)
+        if (prevLength < unit.currLength)
         {
             Camera.main.orthographicSize += 0.075f;
-            prevSpread = unit.currSpread;
+            prevLength = unit.currLength;
         }
-        if (prevSpread > unit.currSpread)
+        if (prevLength > unit.currLength)
         {
             Camera.main.orthographicSize -= 0.075f;
-            prevSpread = unit.currSpread;
+            prevLength = unit.currLength;
         }
     }
 }
