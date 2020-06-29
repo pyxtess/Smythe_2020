@@ -6,19 +6,21 @@ public class UnitMetal : MonoBehaviour
 {
     public string MetalName;
 //-----------------------------------------------
-    //Bone Group
+//Bone Group
     public GameObject boneGroup;
-//-----------------------------------------------
-    //Bones
+
     public GameObject[] spine;
     public GameObject[] leftEdge;
     public GameObject[] rightEdge;
-//-----------------------------------------------
-    //Pointers
+    //-----------------------------------------------
+    //UI Point
+    public bool ptrActive;
     public GameObject centerPoint;
     public GameObject editPoint;
     [SerializeField] private int ePos;
     [SerializeField] private int col = 0;
+    //public GameObject prevMenu;
+    //public GameObject currMenu;
 //-----------------------------------------------
     public float maxLength;
     public float maxWidth;
@@ -61,13 +63,38 @@ public class UnitMetal : MonoBehaviour
         UpdateCenter();
     }
 
-    /// 
-/// ///////////////////////////////////////////////////////////////////////
+    private void Update()
+    {
+        if(ptrActive)
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+                nextBone();
+            if (Input.GetKeyDown(KeyCode.S))
+                prevBone();
+            if (Input.GetKeyDown(KeyCode.A))
+                leftBone();
+            if (Input.GetKeyDown(KeyCode.D))
+                rightBone();
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-* UI Guide Section: Where UI elements are located
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ptrActive = !ptrActive;
+                editPoint.SetActive(false);
+                //prevMenu.SetActive(true);
+            }
+                
+        }
+        
+    }
+
+    /// 
+    /// ///////////////////////////////////////////////////////////////////////
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+    * UI Guide Section: Where UI elements are located
+    \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     // Goes to next bone; loops back around if at end
     public void nextBone()
     {
@@ -181,6 +208,7 @@ public class UnitMetal : MonoBehaviour
 * Update Section: Where components are updated
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    
     // Updates UI elements
     public void UpdateUI()
     {
@@ -198,9 +226,18 @@ public class UnitMetal : MonoBehaviour
                 break;
 
         }
+
+        //currMenu.transform.position = editPoint.transform.position;
         
     }
-        
+
+    public void toggleUIPoint()
+    {
+        ptrActive = !ptrActive;
+    }
+
+    
+
     // Updates center point location
     public Vector3 UpdateCenter()
     {
@@ -269,7 +306,7 @@ public class UnitMetal : MonoBehaviour
     }
 
     //Spreads spine bones vertically
-    public void drawAllVertical(float lengthScale)
+    public void drawVertical(float lengthScale)
     {
         if(currLength < maxLength)
         {
@@ -282,7 +319,7 @@ public class UnitMetal : MonoBehaviour
         }
     }
 
-    public void drawAllHorizontal(float widthScale)
+    public void drawHorizontal(float widthScale)
     {
         if (currWidth < maxWidth)
         {
@@ -312,6 +349,8 @@ public class UnitMetal : MonoBehaviour
         if (col == 0) //Not permanent
             spine[ePos].transform.Rotate(new Vector3(0f, 0f, 1f));
     }
+
+    //public void bevelPoint
 
     /// 
 /// ///////////////////////////////////////////////////////////////////////

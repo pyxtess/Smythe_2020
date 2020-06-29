@@ -12,6 +12,12 @@ public class MetalController : MonoBehaviour
     public Text consolidationLvlText;
     public Text porosityText;
 
+    public bool ptrActive;
+
+    //Deals with different hammers/loadouts
+    //
+    //
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,9 +29,10 @@ public class MetalController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            unit.drawAllHorizontal(0.15f);
+        
         /*
+        if (Input.GetKeyDown(KeyCode.F))
+            unit.drawHorizontal(0.15f);
         if (Input.GetKeyDown(KeyCode.R))
             unit.Spread();
         if (Input.GetKeyDown(KeyCode.W))
@@ -59,6 +66,7 @@ public class MetalController : MonoBehaviour
         //Porosity Threshold Position
         porosityText.text = "Porosity Threshold: " + unit.currPorosity + " u.";
     }
+
 
 
 }
