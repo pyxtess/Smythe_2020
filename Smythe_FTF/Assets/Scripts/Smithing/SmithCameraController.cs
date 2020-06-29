@@ -6,6 +6,9 @@ public class SmithCameraController : MonoBehaviour
 {
     UnitMetal unit;
 
+    public GameObject menuController;
+    MenuController mc;
+
     private Vector3 targetPos;
     public float cameraSpeed;
 
@@ -18,6 +21,8 @@ public class SmithCameraController : MonoBehaviour
     void Start()
     {
         unit = GameObject.FindGameObjectWithTag("UnitInfo").GetComponent<UnitMetal>();
+        mc = menuController.GetComponent<MenuController>();
+
         prevConsolidation = unit.maxConsolidation;
         prevLength = unit.currLength;
 
@@ -28,19 +33,47 @@ public class SmithCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateOrthogonalSize();
-        viewCenterPoint();
+        if(!mc.ptrActive)
+        {
+            //UpdateOrthogonalSize();
+            viewCenterPoint();
+        }
+        else
+        {
+            viewEditPoint();
+        }
+        
 
     }
     
     //Keeps Camera locked on center position
     private void viewCenterPoint()
     {
+
         targetPos = new Vector3(unit.centerPoint.transform.position.x, unit.centerPoint.transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPos, cameraSpeed * Time.fixedDeltaTime);
-
-        
     }
+
+    //Keeps Camera locked on edit point
+    private void viewEditPoint()
+    {
+
+        targetPos = new Vector3(unit.editPoint.transform.position.x, unit.editPoint.transform.position.y, transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, targetPos, cameraSpeed * Time.fixedDeltaTime);
+    }
+
+    //Zooms In
+    public void zoomIn(float zoom)
+    {
+        Camera.main.orthographicSize -= zoom;
+    }
+    //Zooms Out
+    public void zoomOut(float zoom)
+    {
+        Camera.main.orthographicSize += zoom;
+    }
+
+    /*
 
     //Updates camera scale
     private void UpdateOrthogonalSize()
@@ -61,4 +94,5 @@ public class SmithCameraController : MonoBehaviour
             prevLength = unit.currLength;
         }
     }
+    */
 }

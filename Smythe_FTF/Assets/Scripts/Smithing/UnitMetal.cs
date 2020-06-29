@@ -18,7 +18,7 @@ public class UnitMetal : MonoBehaviour
     public GameObject centerPoint;
     public GameObject editPoint;
     [SerializeField] private int ePos;
-    [SerializeField] private int col = 0;
+    public int col = 0;
 //-----------------------------------------------
     public float maxLength;
     public float maxWidth;
@@ -47,6 +47,7 @@ public class UnitMetal : MonoBehaviour
     private void Start()
     {
         editPoint.transform.position = spine[1].transform.position;
+        editPoint.SetActive(false);
         ePos = 1;
 
         currLength = 1;

@@ -23,8 +23,6 @@ public class MetalController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            unit.drawAllHorizontal(0.15f);
         /*
         if (Input.GetKeyDown(KeyCode.R))
             unit.Spread();

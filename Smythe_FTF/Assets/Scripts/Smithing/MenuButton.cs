@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MenuButton : MonoBehaviour
 {
     public Button myButton;
     public int thisIndex;
+    public int prevIndex = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +26,7 @@ public class MenuButton : MonoBehaviour
 
     private void OnEnable()
     {
-        if (thisIndex == 0)
+        if (thisIndex == prevIndex)
         {
             // Select the button
             myButton.Select(); // Or EventSystem.current.SetSelectedGameObject(myButton.gameObject)
@@ -32,10 +34,6 @@ public class MenuButton : MonoBehaviour
             // Highlight the button
             myButton.OnSelect(null); // Or myButton.OnSelect(new BaseEventData(EventSystem.current))
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }
