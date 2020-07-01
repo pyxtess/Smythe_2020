@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * CameraController: Controls camera during sword making process
+*/
+
 public class SmithCameraController : MonoBehaviour
 {
     UnitMetal unit;

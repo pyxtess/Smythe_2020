@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/*
+ * MenuController: Template Menu controller
+*/
+
 public class MenuController : MonoBehaviour
 {
     public GameObject[] MenuObjects;

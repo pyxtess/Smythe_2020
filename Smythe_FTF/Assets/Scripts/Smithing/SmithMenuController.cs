@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/*
+ * SmithMenuController: Controls the Smithing Stage of the Sword making process
+*/
+
 public enum SmithState { Start, MoveSelection, AreaSelection, SubMoveSelection, Action, Busy};
 
 public class SmithMenuController : MonoBehaviour
