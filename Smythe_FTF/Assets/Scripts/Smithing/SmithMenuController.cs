@@ -31,6 +31,8 @@ public class SmithMenuController : MonoBehaviour
     /////////////////////
     public SmithDialogueController dialogueBox;
 
+    //////////////////////////////////////////
+    /////////////////////
     // Start is called before the first frame update
     void Start()
     {
@@ -58,48 +60,73 @@ public class SmithMenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (state)
-        {
-            /////////////////////
-            //Move Selector Menu
-            case SmithState.MoveSelection:
-                //Movement
-                MoveMenuController.VerticalMenuControl();
-                //Submit & Cancel
-                if (Input.GetKeyUp(KeyCode.Return))
-                {
-                    switch (MoveMenuController.currPosition)
-                    {
-                        case 0:
-                            unit.Consolidation(0.1f);
-                            break;
-                        case 1:
-                            MenuSetup(AreaSelector, MoveMenu, SmithState.AreaSelection, "Select an area you wish to draw out...");
-                            break;
-                    }
-                }
-                break;
-            /////////////////////
-            //Area Selector
-            case SmithState.AreaSelection:
-                AreaSelection();
-                break;
-            /////////////////////
-            //Sub Menus
-            case SmithState.SubMoveSelection:
-                SubMenuController.CircularMenuControl();
-                //if (Input.GetKeyUp(KeyCode.Return))
-                    
-                if (Input.GetKeyUp(KeyCode.Escape))
-                        MenuSetup(AreaSelector, currSubMenu, SmithState.AreaSelection, "Select an area you wish to draw out...");
-                break;
-            /////////////////////
-            //Minigame
-            case SmithState.Action:
-                break;
-        }
-    }
 
+        if (state == SmithState.AreaSelection)
+        {
+            int x = AreaSelectorController.SelectorControl();
+            switch (x)
+            {
+                case 1:
+                    if (AreaSelectorController.col != 0)
+                        SubMenuSetup(EdgeMenu);
+                    else
+                        SubMenuSetup(SpineMenu);
+                    break;
+                case -1:
+
+                    break;
+            }
+        }
+
+
+        /*
+    switch (state)
+    {
+        /////////////////////
+        //Move Selector Menu
+        case SmithState.MoveSelection:
+            //Movement
+            //MoveMenuController.VerticalMenuControl();
+            //Submit & Cancel
+
+            if (Input.GetKeyUp(KeyCode.Return))
+            {
+                switch (MoveMenuController.currPosition)
+                {
+                    case 0:
+                        unit.Consolidation(0.1f);
+                        break;
+                    case 1:
+                        MenuSetup(AreaSelector, MoveMenu, SmithState.AreaSelection, "Select an area you wish to draw out...");
+                        break;
+                }
+            }
+
+            break;
+        /////////////////////
+        //Area Selector
+        case SmithState.AreaSelection:
+            AreaSelection();
+            break;
+        /////////////////////
+        //Sub Menus
+        case SmithState.SubMoveSelection:
+            //SubMenuController.CircularMenuControl();
+            //if (Input.GetKeyUp(KeyCode.Return))
+
+            if (Input.GetKeyUp(KeyCode.Escape))
+                    MenuSetup(AreaSelector, currSubMenu, SmithState.AreaSelection, "Select an area you wish to draw out...");
+            break;
+        /////////////////////
+        //Minigame
+        case SmithState.Action:
+            break;
+    */
+
+    }
+    /////////////////////
+    /////////////////////
+    //Setups
     void MenuSetup(GameObject menu, GameObject prevMenu, SmithState newState, string dialoguePrompt, bool saveMenu = false)
     {
         state = newState;
@@ -109,23 +136,35 @@ public class SmithMenuController : MonoBehaviour
         {
             currSubMenu = menu;
             SubMenuController = currSubMenu.GetComponent<MenuController>();
-            if (Input.GetKeyUp(KeyCode.Return))
-            {
-                
-            }
-
-            if (Input.GetKeyUp(KeyCode.Escape))
-                MenuSetup(MoveMenu, AreaSelector, SmithState.MoveSelection, "Ok... What will you do?");
         }
         else
         {
             currSubMenu = null;
             SubMenuController = null;
         }
-
         StartCoroutine(dialogueBox.TypeDialogue(dialoguePrompt));
     }
-
+    /////////////////////
+    public void MoveMenuSetup()
+    {
+        MenuSetup(MoveMenu, AreaSelector, SmithState.AreaSelection, "What will you do?", true);
+    }
+    /////////////////////
+    public void AreaSelectionSetup(bool fromSubMenu = false)
+    {
+        if (fromSubMenu)
+            MenuSetup(AreaSelector, currSubMenu, SmithState.AreaSelection, "...and select an how you wish to draw!");
+        else
+            MenuSetup(AreaSelector, MoveMenu, SmithState.AreaSelection, "...and select an how you wish to draw!");
+    }
+    /////////////////////
+    public void SubMenuSetup(GameObject subMenu)
+    {
+        MenuSetup(subMenu, AreaSelector, SmithState.AreaSelection, "...and select an how you wish to draw!", true);
+    }
+    /////////////////////
+    /////////////////////
+    //Area Selector Controller
     void AreaSelection()
     {
         //UP

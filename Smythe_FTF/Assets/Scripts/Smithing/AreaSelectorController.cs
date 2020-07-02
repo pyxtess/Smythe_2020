@@ -22,6 +22,32 @@ public class AreaSelectorController : MonoBehaviour
         UpdateAreaSelector();
     }
 
+    public int SelectorControl()
+    {
+        //UP
+        if (Input.GetKeyDown(KeyCode.W))
+            nextBone();
+        //Down
+        if (Input.GetKeyDown(KeyCode.S))
+            prevBone();
+        //Left
+        if (Input.GetKeyDown(KeyCode.A))
+            leftBone();
+        //Right
+        if (Input.GetKeyDown(KeyCode.D))
+            rightBone();
+
+        UpdateAreaSelector();
+
+        if (Input.GetKeyUp(KeyCode.Return))
+            return 1;
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+            return -1;
+        else
+            return 0;
+    }
+
     // Updates Area Selector
     public void UpdateAreaSelector()
     {
