@@ -16,7 +16,9 @@ public class UnitMetal : MonoBehaviour
 //-----------------------------------------------
     //Pointers
     public GameObject centerPoint;
-    
+    public GameObject editPoint;
+    [SerializeField] private int ePos;
+    public int col = 0;
 //-----------------------------------------------
     public float maxLength;
     public float maxWidth;
@@ -44,6 +46,10 @@ public class UnitMetal : MonoBehaviour
     \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private void Start()
     {
+        editPoint.transform.position = spine[1].transform.position;
+        editPoint.SetActive(false);
+        ePos = 1;
+
         currLength = 1;
         currWidth = 1;
 
@@ -63,7 +69,111 @@ public class UnitMetal : MonoBehaviour
 * UI Guide Section: Where UI elements are located
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
-    
+    // Goes to next bone; loops back around if at end
+    public void nextBone()
+    {
+        switch (col)
+        {
+            case 0:
+                if (ePos + 1 >= spine.Length)
+                {
+                    ePos = 1;
+                    editPoint.transform.position = spine[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = spine[++ePos].transform.position;
+                break;
+            case -1:
+                if (ePos + 1 >= leftEdge.Length)
+                {
+                    ePos = 0;
+                    editPoint.transform.position = leftEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = leftEdge[++ePos].transform.position;
+                break;
+            case 1:
+                if (ePos + 1 >= rightEdge.Length)
+                {
+                    ePos = 0;
+                    editPoint.transform.position = rightEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = rightEdge[++ePos].transform.position;
+                break;
+        }
+    }
+
+    // Goes to prev bone; loops back around if at beginning
+    public void prevBone()
+    {
+        switch(col)
+        {
+            case 0:
+                if (ePos - 1 < 1)
+                {
+                    ePos = spine.Length - 1;
+                    editPoint.transform.position = spine[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = spine[--ePos].transform.position;
+                break;
+            case -1:
+                if (ePos - 1 < 0)
+                {
+                    ePos = leftEdge.Length - 1;
+                    editPoint.transform.position = leftEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = leftEdge[--ePos].transform.position;
+                break;
+            case 1:
+                if (ePos - 1 < 0)
+                {
+                    ePos = rightEdge.Length - 1;
+                    editPoint.transform.position = rightEdge[ePos].transform.position;
+                }
+                else
+                    editPoint.transform.position = rightEdge[--ePos].transform.position;
+                break;
+        }  
+    }
+
+    // Goes to left bone group
+    public void leftBone()
+    {
+        switch(col)
+        {
+            case 0:
+                editPoint.transform.position = leftEdge[--ePos].transform.position;
+                --col;
+                break;
+            case 1:
+                editPoint.transform.position = spine[++ePos].transform.position;
+                --col;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Goes to left bone group
+    public void rightBone()
+    {
+        switch (col)
+        {
+            case 0:
+                editPoint.transform.position = rightEdge[--ePos].transform.position;
+                ++col;
+                break;
+            case -1:
+                editPoint.transform.position = spine[++ePos].transform.position;
+                ++col;
+                break;
+            default:
+                break;
+        }
+    }
 
     /// 
 /// ///////////////////////////////////////////////////////////////////////
@@ -72,7 +182,25 @@ public class UnitMetal : MonoBehaviour
 * Update Section: Where components are updated
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    
+    // Updates UI elements
+    public void UpdateUI()
+    {
+        //Updates EditPoint position
+        switch(col)
+        {
+            case 0:
+                editPoint.transform.position = spine[ePos].transform.position;
+                break;
+            case 1:
+                editPoint.transform.position = rightEdge[ePos].transform.position;
+                break;
+            case -1:
+                editPoint.transform.position = leftEdge[ePos].transform.position;
+                break;
+
+        }
+        
+    }
         
     // Updates center point location
     public Vector3 UpdateCenter()
@@ -137,7 +265,7 @@ public class UnitMetal : MonoBehaviour
             UpdateLength();
             UpdateWidth();
             UpdateCenter();
-            //UpdateUI();
+            UpdateUI();
         }
     }
 
@@ -151,7 +279,7 @@ public class UnitMetal : MonoBehaviour
 
             UpdateLength();
             UpdateCenter();
-            //UpdateUI();
+            UpdateUI();
         }
     }
 
@@ -166,10 +294,10 @@ public class UnitMetal : MonoBehaviour
 
             UpdateWidth();
             UpdateCenter();
-            //UpdateUI();
+            UpdateUI();
         }
     }
-    /*
+
     //Rotate the spine clockwise
     public void rotateCW()
     {
@@ -185,7 +313,7 @@ public class UnitMetal : MonoBehaviour
         if (col == 0) //Not permanent
             spine[ePos].transform.Rotate(new Vector3(0f, 0f, 1f));
     }
-    */
+
     /// 
 /// ///////////////////////////////////////////////////////////////////////
 

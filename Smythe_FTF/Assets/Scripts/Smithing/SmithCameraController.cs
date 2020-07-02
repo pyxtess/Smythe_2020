@@ -7,7 +7,7 @@ public class SmithCameraController : MonoBehaviour
     UnitMetal unit;
 
     public GameObject menuController;
-    //MenuController mc;
+    MenuController mc;
 
     private Vector3 targetPos;
     public float cameraSpeed;
@@ -21,7 +21,7 @@ public class SmithCameraController : MonoBehaviour
     void Start()
     {
         unit = GameObject.FindGameObjectWithTag("UnitInfo").GetComponent<UnitMetal>();
-        //mc = menuController.GetComponent<MenuController>();
+        mc = menuController.GetComponent<MenuController>();
 
         prevConsolidation = unit.maxConsolidation;
         prevLength = unit.currLength;
@@ -33,7 +33,6 @@ public class SmithCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
         if(!mc.ptrActive)
         {
             //UpdateOrthogonalSize();
@@ -43,7 +42,7 @@ public class SmithCameraController : MonoBehaviour
         {
             viewEditPoint();
         }
-        */
+        
 
     }
     
@@ -52,6 +51,14 @@ public class SmithCameraController : MonoBehaviour
     {
 
         targetPos = new Vector3(unit.centerPoint.transform.position.x, unit.centerPoint.transform.position.y, transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, targetPos, cameraSpeed * Time.fixedDeltaTime);
+    }
+
+    //Keeps Camera locked on edit point
+    private void viewEditPoint()
+    {
+
+        targetPos = new Vector3(unit.editPoint.transform.position.x, unit.editPoint.transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPos, cameraSpeed * Time.fixedDeltaTime);
     }
 
