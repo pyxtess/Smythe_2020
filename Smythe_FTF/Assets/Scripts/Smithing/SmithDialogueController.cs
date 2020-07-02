@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-/*
- * Dialogue Controller: Controls scolling text
-*/
-
 public class SmithDialogueController : MonoBehaviour
 {
     public TextMeshProUGUI dialogue;

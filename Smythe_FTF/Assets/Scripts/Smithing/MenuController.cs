@@ -5,10 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-/*
- * MenuController: Template Menu controller
-*/
-
 public class MenuController : MonoBehaviour
 {
     public GameObject[] MenuObjects;

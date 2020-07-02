@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * AreaSelectorController: Controller for the Area selector
-*/
-
 public class AreaSelectorController : MonoBehaviour
 {
 

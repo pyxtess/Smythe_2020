@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/*
- * UnitMetal: Holds all the stats and metal manipulation functions for an ingot
-*/
+
 public class UnitMetal : MonoBehaviour
 {
     public string MetalName;
